@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Herbarium | Guia Completo de Fitoterápicos e Plantas Medicinais</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Playfair Display & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            botanical: {
+              50: '#f4f7f4',
+              100: '#e3ebe3',
+              200: '#c6d8c6',
+              300: '#9ebf9e',
+              400: '#729f73',
+              500: '#4e8050',
+              600: '#3c663e',
+              700: '#315233',
+              800: '#29422b',
+              900: '#233725',
+              950: '#111e13',
+            },
+            amberwood: {
+              50: '#faf6f0',
+              100: '#f3eade',
+              300: '#d9be9b',
+              500: '#b89163',
+              700: '#8c633a',
+              900: '#52371e'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f4f7f4;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #729f73;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3c663e;
+    }
+
+    /* Botanical Background Pattern & Animations */
+    .hero-gradient {
+      background: linear-gradient(135deg, rgba(17, 30, 19, 0.95) 0%, rgba(35, 55, 37, 0.88) 100%),
+                  url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    }
+
+    /* Leaf Floating Canvas Container */
+    #leafCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Custom Glassmorphic Cards */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(198, 216, 198, 0.4);
+    }
+
+    /* Pulse Glow Animation */
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(78, 128, 80, 0.2); }
+      50% { box-shadow: 0 0 25px rgba(78, 128, 80, 0.45); }
+    }
+    .active-timer {
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-botanical-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col relative selection:bg-botanical-200 selection:text-botanical-900">
+
+  <!-- Canvas interativo para animação de folhas caindo/flutuando -->
+  <canvas id="leafCanvas"></canvas>
+
+  <!-- ================= HEADER & NAVIGATION ================= -->
+  <header class="sticky top-0 z-40 bg-botanical-900/90 backdrop-blur-md text-white border-b border-botanical-800 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="#" class="flex items-center space-x-3 group">
+        <div class="w-10 h-10 rounded-full bg-botanical-500/30 flex items-center justify-center border border-botanical-400/40 group-hover:scale-105 transition-transform">
+          <i class="fa-solid font-bold fa-leaf text-botanical-300 text-xl"></i>
+        </div>
+        <div>
+          <span class="font-serif text-2xl font-bold tracking-tight text-botanical-100">Herbarium</span>
+          <span class="text-xs block font-sans uppercase tracking-widest text-botanical-300">Fitoterapia Nativa</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center space-x-8 font-medium text-sm text-botanical-200">
+        <a href="#catalogo" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-book-bookmark text-xs"></i> Catálogo</a>
+        <a href="#preparos" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-mortar-pestle text-xs"></i> Métodos</a>
+        <a href="#quiz" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Guia Interativo</a>
+        <a href="#timer" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-stopwatch text-xs"></i> Temporizador</a>
+        <a href="#horta" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-seedling text-xs"></i> Cultivo</a>
+      </nav>
+
+      <!-- Quick Action CTA -->
+      <a href="#quiz" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amberwood-500 hover:bg-amberwood-700 text-white font-medium text-sm transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+        <i class="fa-solid fa-compass"></i> Qual planta escolher?
+      </a>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuBtn" class="md:hidden text-botanical-200 hover:text-white text-2xl p-2 focus:outline-none">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Dropdown Nav -->
+    <div id="mobileMenu" class="hidden md:hidden bg-botanical-950 border-b border-botanical-800 px-6 py-4 space-y-3 font-medium text-botanical-200">
+      <a href="#catalogo" class="block hover:text-white py-1">Catálogo de Plantas</a>
+      <a href="#preparos" class="block hover:text-white py-1">Métodos de Preparo</a>
+      <a href="#quiz" class="block hover:text-white py-1">Guia de Recomendação</a>
+      <a href="#timer" class="block hover:text-white py-1">Temporizador de Infusão</a>
+      <a href="#horta" class="block hover:text-white py-1">Dicas de Cultivo</a>
+    </div>
+  </header>
+
+  <!-- ================= HERO SECTION ================= -->
+  <section class="relative hero-gradient text-white py-24 md:py-32 px-4 sm:px-6 lg:px-8 flex items-center justify-center overflow-hidden z-10">
+    <div class="max-w-4xl mx-auto text-center relative z-10 space-y-6">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-botanical-500/30 border border-botanical-300/30 text-botanical-200 text-xs sm:text-sm font-semibold uppercase tracking-wider backdrop-blur-md">
+        <i class="fa-solid fa-flask-vial text-botanical-300"></i> Sabedoria Ancestral & Ciência Fitoterápica
+      </div>
+
+      <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight">
+        O Poder Medicinal das Plantas em Suas Mãos
+      </h1>
+
+      <p class="text-base sm:text-lg text-botanical-100/90 max-w-2xl mx-auto font-normal leading-relaxed">
+        Descubra propriedades terapêuticas, formas corretas de preparo, dosagens e cuidados essenciais no uso seguro de ervas e fitoterápicos.
+      </p>
+
+      <!-- Main Search Bar -->
+      <div class="pt-4 max-w-2xl mx-auto">
+        <div class="relative flex items-center shadow-2xl rounded-2xl overflow-hidden bg-white/95 p-2 backdrop-blur-md border border-white/20">
+          <i class="fa-solid fa-magnifying-glass text-botanical-600 text-xl pl-4 pr-2"></i>
+          <input 
+            type="text" 
+            id="heroSearchInput" 
+            placeholder="Procure por planta ou sintoma (ex: Camomila, Ansiedade, Digestão, Insônia)..."
+            class="w-full py-3 px-2 text-slate-800 placeholder-slate-400 focus:outline-none text-sm sm:text-base font-medium"
+          >
+          <button id="heroSearchBtn" class="bg-botanical-600 hover:bg-botanical-700 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all shadow-md shrink-0 flex items-center gap-2">
+            Buscar <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+
+        <!-- Quick Tag Pills -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs font-medium text-botanical-200">
+          <span class="text-botanical-300">Sugestões rápidas:</span>
+          <button onclick="quickFilter('Calmante')" class="bg-botanical-800/60 hover:bg-botanical-700 px-3 py-1 rounded-full border border-botanical-600/40 transition-colors">✨ Calmante</button>
+          <button onclick="quickFilter('Digestivo')" class="bg-botanical-800/60 hover:bg-botanical-700 px-3 py-1 rounded-full border border-botanical-600/40 transition-colors">🌿 Digestivo</button>
+          <button onclick="quickFilter('Anti-inflamatório')" class="bg-botanical-800/60 hover:bg-botanical-700 px-3 py-1 rounded-full border border-botanical-600/40 transition-colors">🛡️ Anti-inflamatório</button>
+          <button onclick="quickFilter('Respiratório')" class="bg-botanical-800/60 hover:bg-botanical-700 px-3 py-1 rounded-full border border-botanical-600/40 transition-colors">🫁 Respiratório</button>
+        </div>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-10 text-center border-t border-botanical-700/50 max-w-3xl mx-auto">
+        <div>
+          <span class="block font-serif text-2xl font-bold text-amberwood-300">100%</span>
+          <span class="text-xs text-botanical-200">Base em Uso Seguro</span>
+        </div>
+        <div>
+          <span class="block font-serif text-2xl font-bold text-amberwood-300">12+</span>
+          <span class="text-xs text-botanical-200">Espécies Catalogadas</span>
+        </div>
+        <div>
+          <span class="block font-serif text-2xl font-bold text-amberwood-300">4</span>
+          <span class="text-xs text-botanical-200">Métodos de Extração</span>
+        </div>
+        <div>
+          <span class="block font-serif text-2xl font-bold text-amberwood-300">Guia</span>
+          <span class="text-xs text-botanical-200">Com Posologia e Avisos</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MAIN CONTENT CONTAINER ================= -->
+  <main class="flex-grow relative z-10 space-y-24 py-16">
+
+    <!-- SECTION 1: CATALOGO DE PLANTAS -->
+    <section id="catalogo" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div>
+          <div class="flex items-center gap-2 text-botanical-600 text-sm font-semibold tracking-wide uppercase">
+            <i class="fa-solid fa-seedling"></i> Catálogo de Plantas Medicinais
+          </div>
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-botanical-900 mt-1">
+            Explore a Flora Fitoterápica
+          </h2>
+          <p class="text-slate-600 mt-2 text-sm sm:text-base max-w-xl">
+            Clique no card da planta para abrir a ficha completa contendo dosagem, indicação de uso, preparo e contraindicações.
+          </p>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-semibold uppercase text-slate-500 mr-2">Filtrar Categoria:</span>
+          <button data-category="todos" class="category-btn bg-botanical-600 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all shadow-sm">
+            Todas
+          </button>
+          <button data-category="Calmante" class="category-btn bg-white hover:bg-botanical-100 text-slate-700 border border-botanical-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all">
+            Calmantes
+          </button>
+          <button data-category="Digestivo" class="category-btn bg-white hover:bg-botanical-100 text-slate-700 border border-botanical-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all">
+            Digestivos
+          </button>
+          <button data-category="Anti-inflamatório" class="category-btn bg-white hover:bg-botanical-100 text-slate-700 border border-botanical-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all">
+            Anti-inflamatórios
+          </button>
+          <button data-category="Respiratório" class="category-btn bg-white hover:bg-botanical-100 text-slate-700 border border-botanical-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all">
+            Respiratórios
+          </button>
+        </div>
+      </div>
+
+      <!-- Plant Cards Grid -->
+      <div id="plantsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Rendered via JavaScript -->
+      </div>
+
+      <!-- Empty Search Fallback -->
+      <div id="noResults" class="hidden text-center py-16 bg-white rounded-3xl border border-botanical-200 shadow-sm">
+        <div class="w-16 h-16 mx-auto bg-botanical-100 text-botanical-600 rounded-full flex items-center justify-center text-2xl mb-4">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <h3 class="font-serif text-xl font-bold text-slate-800">Nenhuma planta encontrada</h3>
+        <p class="text-slate-500 text-sm mt-1 max-w-md mx-auto">Tente buscar por outro termo, como "Ansiedade", "Digestão", "Gengibre" ou remova os filtros ativos.</p>
+        <button onclick="resetFilters()" class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-botanical-600 text-white rounded-xl text-xs font-semibold hover:bg-botanical-700 transition-colors">
+          <i class="fa-solid fa-rotate"></i> Resetar Filtros
+        </button>
+      </div>
+    </section>
+
+    <!-- SECTION 2: METODOS DE EXTRAÇÃO E PREPARO -->
+    <section id="preparos" class="bg-botanical-900 text-white py-16 scroll-mt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="text-botanical-300 font-semibold text-xs tracking-widest uppercase">Técnicas Fitoterápicas</span>
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white mt-1">
+            Como Preparar Suas Ervas Corretamente
+          </h2>
+          <p class="text-botanical-200 text-sm sm:text-base mt-2">
+            Cada parte da planta requer um tipo de extração específico para liberar os princípios ativos sem destruí-los.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Infusão -->
+          <div class="bg-botanical-800/80 border border-botanical-700 p-6 rounded-2xl hover:border-botanical-500 transition-all">
+            <div class="w-12 h-12 rounded-xl bg-botanical-700/60 text-amberwood-300 flex items-center justify-center text-2xl mb-4">
+              <i class="fa-solid fa-mug-hot"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-white">1. Infusão</h3>
+            <p class="text-xs text-botanical-300 font-medium uppercase mt-1 mb-3">Para Flores e Folhas Delicadas</p>
+            <p class="text-slate-300 text-xs leading-relaxed">
+              Despeja-se água fervente sobre as ervas em um recipiente, tampando imediatamente por 5 a 10 minutos. Evita a perda de óleos essenciais voláteis.
+            </p>
+            <div class="mt-4 pt-3 border-t border-botanical-700 text-xs text-amberwood-300 flex items-center gap-1">
+              <i class="fa-solid fa-circle-check"></i> Camomila, Hortelã, Alecrim
+            </div>
+          </div>
+
+          <!-- Decocção -->
+          <div class="bg-botanical-800/80 border border-botanical-700 p-6 rounded-2xl hover:border-botanical-500 transition-all">
+            <div class="w-12 h-12 rounded-xl bg-botanical-700/60 text-amberwood-300 flex items-center justify-center text-2xl mb-4">
+              <i class="fa-solid fa-fire-burner"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-white">2. Decocção</h3>
+            <p class="text-xs text-botanical-300 font-medium uppercase mt-1 mb-3">Para Cascas, Raízes e Sementes</p>
+            <p class="text-slate-300 text-xs leading-relaxed">
+              As partes rígidas são fervidas junto com a água em recipiente tampado por 5 a 15 minutos em fogo baixo.
+            </p>
+            <div class="mt-4 pt-3 border-t border-botanical-700 text-xs text-amberwood-300 flex items-center gap-1">
+              <i class="fa-solid fa-circle-check"></i> Gengibre, Canela, Mulungu
+            </div>
+          </div>
+
+          <!-- Maceração -->
+          <div class="bg-botanical-800/80 border border-botanical-700 p-6 rounded-2xl hover:border-botanical-500 transition-all">
+            <div class="w-12 h-12 rounded-xl bg-botanical-700/60 text-amberwood-300 flex items-center justify-center text-2xl mb-4">
+              <i class="fa-solid fa-flask"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-white">3. Maceração</h3>
+            <p class="text-xs text-botanical-300 font-medium uppercase mt-1 mb-3">Extração a Frio</p>
+            <p class="text-slate-300 text-xs leading-relaxed">
+              A planta permanece de molho em água fria, álcool de cereais ou óleo durante horas ou dias em ambiente protegido da luz.
+            </p>
+            <div class="mt-4 pt-3 border-t border-botanical-700 text-xs text-amberwood-300 flex items-center gap-1">
+              <i class="fa-solid fa-circle-check"></i> Espinheira Santa, Tinturas
+            </div>
+          </div>
+
+          <!-- Compressa / Cataplasma -->
+          <div class="bg-botanical-800/80 border border-botanical-700 p-6 rounded-2xl hover:border-botanical-500 transition-all">
+            <div class="w-12 h-12 rounded-xl bg-botanical-700/60 text-amberwood-300 flex items-center justify-center text-2xl mb-4">
+              <i class="fa-solid fa-hand-holding-medical"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-white">4. Cataplasma</h3>
+            <p class="text-xs text-botanical-300 font-medium uppercase mt-1 mb-3">Uso Tópico Externo</p>
+            <p class="text-slate-300 text-xs leading-relaxed">
+              Aplicação direta das plantas amassadas ou do chá concentrado em um pano morno sobre a pele para alívio muscular e cicatrização.
+            </p>
+            <div class="mt-4 pt-3 border-t border-botanical-700 text-xs text-amberwood-300 flex items-center gap-1">
+              <i class="fa-solid fa-circle-check"></i> Arnica, Babosa, Calêndula
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: QUIZ INTERATIVO / GUIA GUIADO -->
+    <section id="quiz" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
+      <div class="bg-gradient-to-br from-botanical-100 to-amberwood-50 p-8 sm:p-12 rounded-3xl border border-botanical-200/80 shadow-xl relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 opacity-10 text-botanical-900 text-9xl font-serif pointer-events-none">
+          <i class="fa-solid fa-spa"></i>
+        </div>
+
+        <div class="relative z-10 text-center">
+          <span class="bg-botanical-600 text-white px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase">
+            Assistente Virtual de Fitoterapia
+          </span>
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-botanical-900 mt-3">
+            Qual a sua necessidade hoje?
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base mt-2 max-w-lg mx-auto">
+            Responda em 1 clique e receba a recomendação de plantas medicinais mais adequadas com orientações de uso.
+          </p>
+
+          <!-- Interactive Wizard Options -->
+          <div id="quizStep1" class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <button onclick="selectSymptom('ansiedade')" class="p-5 bg-white rounded-2xl border border-botanical-200 hover:border-botanical-500 hover:shadow-md transition-all text-left flex items-center gap-4 group">
+              <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                🌙
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-800 text-base">Ansiedade & Insônia</h4>
+                <p class="text-xs text-slate-500 mt-0.5">Preciso relaxar a mente e dormir melhor</p>
+              </div>
+            </button>
+
+            <button onclick="selectSymptom('digestao')" class="p-5 bg-white rounded-2xl border border-botanical-200 hover:border-botanical-500 hover:shadow-md transition-all text-left flex items-center gap-4 group">
+              <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                🫄
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-800 text-base">Má Digestão & Estômago</h4>
+                <p class="text-xs text-slate-500 mt-0.5">Sensação de estufamento ou azia</p>
+              </div>
+            </button>
+
+            <button onclick="selectSymptom('gripe')" class="p-5 bg-white rounded-2xl border border-botanical-200 hover:border-botanical-500 hover:shadow-md transition-all text-left flex items-center gap-4 group">
+              <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                🍵
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-800 text-base">Gripe & Imunidade</h4>
+                <p class="text-xs text-slate-500 mt-0.5">Tosse, resfriado ou garganta irritada</p>
+              </div>
+            </button>
+
+            <button onclick="selectSymptom('disposicao')" class="p-5 bg-white rounded-2xl border border-botanical-200 hover:border-botanical-500 hover:shadow-md transition-all text-left flex items-center gap-4 group">
+              <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                ⚡
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-800 text-base">Fadiga & Foco</h4>
+                <p class="text-xs text-slate-500 mt-0.5">Cansaço físico e falta de concentração</p>
+              </div>
+            </button>
+          </div>
+
+          <!-- Result Area -->
+          <div id="quizResult" class="hidden mt-8 p-6 bg-white rounded-2xl border border-botanical-300 text-left shadow-lg animate-fadeIn">
+            <div id="quizResultContent"></div>
+            <button onclick="resetQuiz()" class="mt-6 inline-flex items-center gap-2 text-xs font-bold text-botanical-700 hover:text-botanical-900">
+              <i class="fa-solid fa-arrow-left"></i> Escolher outro sintoma
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: TEMPORIZADOR DE INFUSÃO DE CHÁS -->
+    <section id="timer" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
+      <div class="bg-white rounded-3xl border border-botanical-200 p-8 sm:p-12 shadow-lg grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div>
+          <span class="text-xs font-semibold uppercase text-botanical-600 tracking-wider">Cronômetro Fitoterápico</span>
+          <h2 class="font-serif text-3xl font-bold text-botanical-900 mt-1">
+            Temporizador de Infusão Perfeita
+          </h2>
+          <p class="text-slate-600 text-sm mt-3 leading-relaxed">
+            O tempo de infusão correto evita o amargor do excesso de taninos e garante a máxima extração dos óleos essenciais terapêuticos.
+          </p>
+
+          <div class="mt-6 space-y-4">
+            <label class="block text-xs font-bold uppercase text-slate-500">Selecione o tipo de preparação:</label>
+            <select id="timerPlantSelect" class="w-full p-3 bg-botanical-50 border border-botanical-200 rounded-xl text-slate-800 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-botanical-500">
+              <option value="300">Infusão Leve - Flores (Camomila, Calêndula) - 5 min</option>
+              <option value="420" selected>Infusão Padrão - Folhas (Hortelã, Alecrim, Capim-Limão) - 7 min</option>
+              <option value="600">Infusão Intensa - Folhas Rígidas (Espinheira Santa, Guaco) - 10 min</option>
+              <option value="900">Decocção - Raízes e Cascas (Gengibre, Canela) - 15 min</option>
+            </select>
+
+            <div class="flex items-center gap-3 text-xs text-slate-500">
+              <i class="fa-solid fa-temperature-half text-amberwood-500 text-base"></i>
+              <span>Temperatura ideal recomendada: <strong>~90°C a 95°C</strong> (água logo após o início da fervura).</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timer Visual Display -->
+        <div class="bg-botanical-900 text-white rounded-2xl p-8 text-center flex flex-col items-center justify-center relative overflow-hidden border border-botanical-800">
+          <div class="w-36 h-36 rounded-full border-4 border-botanical-700 flex flex-col items-center justify-center my-2 relative">
+            <span id="timerDisplay" class="font-serif text-4xl font-bold tracking-tight">07:00</span>
+            <span id="timerStatus" class="text-[10px] uppercase text-botanical-300 font-bold tracking-widest mt-1">Pronto</span>
+          </div>
+
+          <div class="flex gap-3 mt-6">
+            <button id="startTimerBtn" onclick="toggleTimer()" class="bg-amberwood-500 hover:bg-amberwood-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all flex items-center gap-2">
+              <i id="playIcon" class="fa-solid fa-play"></i> <span id="btnText">Iniciar Infusão</span>
+            </button>
+            <button onclick="resetTimer()" class="bg-botanical-800 hover:bg-botanical-700 text-botanical-200 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: HORTA MEDICINAL CASEIRA -->
+    <section id="horta" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="text-botanical-600 font-semibold text-xs tracking-widest uppercase">Cultivo Caseiro</span>
+        <h2 class="font-serif text-3xl font-bold text-botanical-900 mt-1">
+          Como Ter Sua Horta Medicinal
+        </h2>
+        <p class="text-slate-600 text-sm mt-2">
+          Dicas práticas para cultivar suas próprias plantas fitoterápicas em vasos, varandas ou quintais.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-botanical-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xl mb-4">
+            ☀️
+          </div>
+          <h4 class="font-bold text-slate-800 text-base">Luz Solar Direta</h4>
+          <p class="text-slate-600 text-xs mt-2 leading-relaxed">
+            A maioria das ervas medicinais (como Alecrim, Manjericão e Hortelã) necessita de pelo menos <strong>4 a 6 horas diárias</strong> de sol direto para concentrar seus óleos essenciais.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-botanical-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xl mb-4">
+            💧
+          </div>
+          <h4 class="font-bold text-slate-800 text-base">Drenagem Adequada</h4>
+          <p class="text-slate-600 text-xs mt-2 leading-relaxed">
+            Use vasos com furos e camada de argila expandida no fundo. O acúmulo de água nas raízes é a causa número um de morte de ervas em apartamentos.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-botanical-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl mb-4">
+            🌱
+          </div>
+          <h4 class="font-bold text-slate-800 text-base">Solo Rico e Orgânico</h4>
+          <p class="text-slate-600 text-xs mt-2 leading-relaxed">
+            Combine 50% de terra vegetal com 50% de húmus de minhoca ou composto orgânico. Evite adubos químicos concentrados em plantas para consumo humano.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-botanical-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-xl mb-4">
+            ✂️
+          </div>
+          <h4 class="font-bold text-slate-800 text-base">Colheita Consciente</h4>
+          <p class="text-slate-600 text-xs mt-2 leading-relaxed">
+            Colha as folhas preferencialmente pela manhã, após o orvalho secar e antes do sol forte do meio-dia, quando o teor de ativos voláteis está no pico.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= MODAL DE FICHA COMPLETA DA PLANTA ================= -->
+  <div id="plantModal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-botanical-200 transform scale-95 transition-transform duration-300 relative" id="modalContent">
+      
+      <!-- Close Button -->
+      <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-lg z-10 transition-colors">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Dynamic Header Banner -->
+      <div id="modalHeaderBg" class="p-8 bg-botanical-900 text-white relative overflow-hidden rounded-t-3xl">
+        <div class="relative z-10 flex items-center gap-4">
+          <span id="modalPlantIcon" class="text-5xl p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">🌼</span>
+          <div>
+            <h3 id="modalPlantName" class="font-serif text-3xl font-bold">Nome da Planta</h3>
+            <p id="modalPlantScientific" class="text-botanical-200 text-sm italic font-sans">Nome Científico</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 sm:p-8 space-y-6 text-slate-700 text-sm">
+        <!-- Indicacoes -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-botanical-700 flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-notes-medical"></i> Indicações Terapêuticas
+          </h4>
+          <p id="modalPlantIndications" class="bg-botanical-50 p-4 rounded-xl border border-botanical-100 leading-relaxed"></p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Parte Usada -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <h5 class="text-xs font-bold uppercase text-slate-500 mb-1">Parte Utilizada</h5>
+            <p id="modalPlantPart" class="font-medium text-slate-800"></p>
+          </div>
+          <!-- Método Recomendado -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <h5 class="text-xs font-bold uppercase text-slate-500 mb-1">Método de Preparo</h5>
+            <p id="modalPlantMethod" class="font-medium text-slate-800"></p>
+          </div>
+        </div>
+
+        <!-- Modo de Preparo e Dosagem -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-botanical-700 flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-spoon"></i> Como Preparar e Dosagem
+          </h4>
+          <p id="modalPlantDosage" class="leading-relaxed bg-amberwood-50/60 p-4 rounded-xl border border-amberwood-100 text-slate-800"></p>
+        </div>
+
+        <!-- Precauções e Contraindicações -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-red-600 flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-triangle-exclamation"></i> Contraindicações & Precauções
+          </h4>
+          <div id="modalPlantWarnings" class="p-4 rounded-xl bg-red-50 border border-red-100 text-red-900 text-xs leading-relaxed"></div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-slate-50 rounded-b-3xl border-t border-slate-200 text-right">
+        <button onclick="closeModal()" class="px-6 py-2.5 bg-botanical-600 hover:bg-botanical-700 text-white text-xs font-bold rounded-xl transition-colors">
+          Entendido, Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-botanical-950 text-botanical-200 pt-16 pb-8 border-t border-botanical-800 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div class="space-y-4 md:col-span-2">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-botanical-500/30 flex items-center justify-center border border-botanical-400/40">
+              <i class="fa-solid fa-leaf text-botanical-300"></i>
+            </div>
+            <span class="font-serif text-2xl font-bold text-white tracking-tight">Herbarium</span>
+          </div>
+          <p class="text-xs text-botanical-300/80 leading-relaxed max-w-sm">
+            Portal informativo dedicado à divulgação consciente de plantas medicinais e fitoterapia nativa. Promovemos o conhecimento tradicional aliado à segurança.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-serif text-white font-bold mb-4 text-sm">Navegação</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#catalogo" class="hover:text-white transition-colors">Catálogo Completo</a></li>
+            <li><a href="#preparos" class="hover:text-white transition-colors">Métodos de Preparo</a></li>
+            <li><a href="#quiz" class="hover:text-white transition-colors">Guia de Sintomas</a></li>
+            <li><a href="#timer" class="hover:text-white transition-colors">Cronômetro de Infusão</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-serif text-white font-bold mb-4 text-sm">Aviso Importante</h4>
+          <p class="text-[11px] text-botanical-300/70 leading-relaxed">
+            As informações contidas neste site possuem caráter estritamente educativo e informativo. Não substituem o diagnóstico, orientação ou tratamento médico profissional.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-8 border-t border-botanical-800/80 text-center text-xs text-botanical-400 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p>&copy; 2026 Herbarium Fitoterápicos. Todos os direitos reservados.</p>
+        <p class="flex items-center gap-1"><i class="fa-solid fa-heart text-amberwood-500"></i> Feito com sabedoria natural</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= JAVASCRIPT APP LOGIC ================= -->
+  <script>
+    const plantsDatabase = [
+      {
+        id: 'camomila',
+        name: 'Camomila',
+        scientific: 'Matricaria chamomilla',
+        icon: '🌼',
+        categories: ['Calmante', 'Digestivo'],
+        shortDesc: 'Calmante suave, melhora a qualidade do sono e alivia digestão lenta.',
+        indications: 'Ansiedade leve, insônia, espasmos gastrointestinais, digestão pesada e nervosismo.',
+        partUsed: 'Capítulos florais secos',
+        method: 'Infusão',
+        dosage: '1 a 2 colheres de sopa das flores para 250ml de água fervente. Deixar em infusão por 5 a 10 minutos. Tomar 2 a 3 vezes ao dia.',
+        warnings: 'Pode desencadear reações alérgicas em indivíduos alérgicos a plantas da família Asteraceae/Compositae. Evitar megadoses.'
+      },
+      {
+        id: 'hortela',
+        name: 'Hortelã-Pimenta',
+        scientific: 'Mentha x piperita',
+        icon: '🌿',
+        categories: ['Digestivo', 'Respiratório'],
+        shortDesc: 'Excelente antiespasmódico intestinal, descongestionante e refrescante.',
+        indications: 'Gases intestinais, síndrome do intestino irritável, má digestão, enjoo e congestão nasal.',
+        partUsed: 'Folhas e hastes',
+        method: 'Infusão ou Inalação',
+        dosage: '1 colher de sobremesa de folhas para cada xícara de água fervente (infusão por 5-7 min). Tomar após as refeições principais.',
+        warnings: 'Contraindicado para pessoas com refluxo gastroesofágico grave e cálculos biliares sem acompanhamento. Não usar o óleo essencial puro em bebês.'
+      },
+      {
+        id: 'alecrim',
+        name: 'Alecrim',
+        scientific: 'Salvia rosmarinus',
+        icon: '🌱',
+        categories: ['Anti-inflamatório', 'Energia'],
+        shortDesc: 'Estimulante físico e mental, melhora a memória e a circulação sanguínea.',
+        indications: 'Fadiga mental, letargia, dores musculares (uso externo) e digestão difícil de gorduras.',
+        partUsed: 'Folhas',
+        method: 'Infusão ou Compressa',
+        dosage: '1 colher de chá de folhas secas por xícara de água fervente. Tomar até 2 vezes ao dia (preferencialmente pela manhã/tarde).',
+        warnings: 'Evitar uso contínuo em doses elevadas por hipertensos descompensados e gestantes. Pode causar insônia se tomado à noite.'
+      },
+      {
+        id: 'passiflora',
+        name: 'Maracujá (Passiflora)',
+        scientific: 'Passiflora incarnata',
+        icon: '🌺',
+        categories: ['Calmante'],
+        shortDesc: 'Sedativo natural potente contra agitação motora, taquicardia nervosa e insônia.',
+        indications: 'Estados de ansiedade intensa, inquietação, dificuldade para adormecer e irritabilidade.',
+        partUsed: 'Folhas secas',
+        method: 'Infusão',
+        dosage: '1 colher de sopa de folhas secas em 200ml de água fervente por 10 minutos. Consumir de 1 a 2 vezes ao dia ou antes de dormir.',
+        warnings: 'Pode potencializar o efeito de medicamentos sedativos, anxiolíticos e álcool. Pode causar sonolência ao dirigir.'
+      },
+      {
+        id: 'gengibre',
+        name: 'Gengibre',
+        scientific: 'Zingiber officinale',
+        icon: '🫚',
+        categories: ['Anti-inflamatório', 'Digestivo', 'Respiratório'],
+        shortDesc: 'Rizoma termogênico, potente antiemético (contra enjoo) e anti-inflamatório.',
+        indications: 'Náuseas de viagem ou gravidez, inflamação de garganta, dores articulares e digestão lenta.',
+        partUsed: 'Rizoma (raiz)',
+        method: 'Decocção',
+        dosage: '1 colher de chá de raiz fatiada ou ralada fervida em 250ml de água por 5 a 10 minutos em fogo baixo.',
+        warnings: 'Usar com cautela em pessoas com cálculo biliar ou que utilizam medicamentos anticoagulantes. Evitar altas doses em hipertensos.'
+      },
+      {
+        id: 'boldo',
+        name: 'Boldo-do-Chile',
+        scientific: 'Peumus boldus',
+        icon: '🍃',
+        categories: ['Digestivo'],
+        shortDesc: 'Protetor hepático tradicional para cólicas biliares e ressaca alcoólica.',
+        indications: 'Desconforto do fígado e vesícula, má digestão de gorduras e azia episódica.',
+        partUsed: 'Folhas secas',
+        method: 'Infusão',
+        dosage: '1 colher de chá de folhas em 150ml de água fervente. Abafar por 5 minutos. Consumir preferencialmente morno após refeições.',
+        warnings: 'Contraindicado durante a gravidez, amamentação, obstrução das vias biliares e doenças hepáticas severas. Não utilizar por mais de 10 dias consecutivos.'
+      },
+      {
+        id: 'guaco',
+        name: 'Guaco',
+        scientific: 'Mikania glomerata',
+        icon: '🌿',
+        categories: ['Respiratório'],
+        shortDesc: 'Broncodilatador e expectorante natural para vias aéreas superiores.',
+        indications: 'Tosse persistente, bronquite, asma leve, rouquidão e excesso de secreção respiratória.',
+        partUsed: 'Folhas',
+        method: 'Infusão ou Xarope',
+        dosage: '1 colher de sobremesa de folhas picadas em 150ml de água fervente por 10 minutos. Tomar 2 a 3 vezes ao dia.',
+        warnings: 'Contém cumarina; não deve ser associado a medicamentos anticoagulantes. Contraindicado em casos de doenças hepáticas graves.'
+      },
+      {
+        id: 'espinheira-santa',
+        name: 'Espinheira-Santa',
+        scientific: 'Monteverdia ilicifolia',
+        icon: '🪴',
+        categories: ['Digestivo', 'Anti-inflamatório'],
+        shortDesc: 'Excelente protetor gástrico natural, reduz a acidez e previne úlceras.',
+        indications: 'Gastrite, úlcera péptica, azia, refluxo e dores estomacais.',
+        partUsed: 'Folhas',
+        method: 'Infusão ou Maceração',
+        dosage: '1 colher de sopa de folhas para 1 xícara de água fervente (infusão de 10 min). Tomar meia hora antes das refeições principais.',
+        warnings: 'Não recomendado para grávidas (pode provocar contrações uterinas) e lactantes (pode reduzir a produção de leite).'
+      },
+      {
+        id: 'capim-limao',
+        name: 'Capim-Limão',
+        scientific: 'Cymbopogon citratus',
+        icon: '🌾',
+        categories: ['Calmante', 'Digestivo'],
+        shortDesc: 'Aromático, calmante leve e antiespasmódico com sabor cítrico agradável.',
+        indications: 'Nervosismo leve, cólicas abdominais, insônia inicial e cefaleia leve.',
+        partUsed: 'Folhas frescas ou secas',
+        method: 'Infusão',
+        dosage: '1 a 2 colheres de sopa de folhas picadas para 250ml de água fervente por 5 a 8 minutos.',
+        warnings: 'Em raros casos pode causar hipotensão (queda de pressão) leve em pessoas predispostas.'
+      },
+      {
+        id: 'curcuma',
+        name: 'Cúrcuma (Açafrão-da-Terra)',
+        scientific: 'Curcuma longa',
+        icon: '🪵',
+        categories: ['Anti-inflamatório'],
+        shortDesc: 'Potente antioxidante natural rico em curcuminoides para dores articulares.',
+        indications: 'Artrite, dores articulares cronicas, processos inflamatórios e proteção celular.',
+        partUsed: 'Rizoma em pó ou fatiado',
+        method: 'Decocção ou Culinária',
+        dosage: '1 colher de chá do pó ou raiz fervida com uma pitada de pimenta-preta (aumenta a absorção em 2000%) por 5 min.',
+        warnings: 'Evitar em caso de obstrução dos dutos biliares e antes de cirurgias programadas devido ao efeito antiplaquetário.'
+      },
+      {
+        id: 'erva-cidreira',
+        name: 'Melissa (Erva-Cidreira)',
+        scientific: 'Melissa officinalis',
+        icon: '🌿',
+        categories: ['Calmante', 'Digestivo'],
+        shortDesc: 'Relaxante do sistema nervoso central e modulador do humor.',
+        indications: 'Estresse, palpitações nervosas, insônia, enxaqueca de origem nervosa e gases.',
+        partUsed: 'Folhas e flores',
+        method: 'Infusão',
+        dosage: '1 colher de sopa para 1 xícara de água fervente. Abafar por 8 minutos. Beber até 3 vezes ao dia.',
+        warnings: 'Pode potencializar sedativos. Pessoas com hipotireoidismo devem evitar o uso prolongado e contínuo.'
+      },
+      {
+        id: 'carqueja',
+        name: 'Carqueja',
+        scientific: 'Baccharis trimera',
+        icon: '🌱',
+        categories: ['Digestivo', 'Energia'],
+        shortDesc: 'Amargo tônico depurativo para o fígado e controle glicêmico coadjuvante.',
+        indications: 'Digestão difícil, apoio no controle de glicemia, retenção de líquidos e lentidão hepática.',
+        partUsed: 'Hastes aladas',
+        method: 'Infusão ou Decocção leve',
+        dosage: '1 colher de sobremesa da planta picada para 200ml de água. Ferver levemente por 3 min ou infundir por 10 min.',
+        warnings: 'Contraindicado na gravidez (risco abortivo) e para hipertensos em uso de medicamentos sem avaliação médica.'
+      }
+    ];
+
+    let currentCategory = 'todos';
+    let searchQuery = '';
+
+    function renderPlants() {
+      const container = document.getElementById('plantsContainer');
+      const noResults = document.getElementById('noResults');
+      container.innerHTML = '';
+
+      const filtered = plantsDatabase.filter(plant => {
+        const matchesCategory = currentCategory === 'todos' || plant.categories.includes(currentCategory);
+        const matchesSearch = searchQuery === '' || 
+          plant.name.toLowerCase().includes(searchQuery) ||
+          plant.scientific.toLowerCase().includes(searchQuery) ||
+          plant.shortDesc.toLowerCase().includes(searchQuery) ||
+          plant.indications.toLowerCase().includes(searchQuery) ||
+          plant.categories.some(c => c.toLowerCase().includes(searchQuery));
+
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        noResults.classList.remove('hidden');
+      } else {
+        noResults.classList.add('hidden');
+        filtered.forEach(plant => {
+          const card = document.createElement('div');
+          card.className = 'glass-card rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all group cursor-pointer border border-botanical-200/80';
+          card.onclick = () => openModal(plant.id);
+
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-4xl p-3 bg-botanical-100/80 rounded-2xl group-hover:scale-110 transition-transform">${plant.icon}</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-botanical-700 bg-botanical-100 px-2.5 py-1 rounded-full border border-botanical-200">${plant.method}</span>
+              </div>
+              
+              <h3 class="font-serif text-xl font-bold text-slate-800 group-hover:text-botanical-700 transition-colors">${plant.name}</h3>
+              <p class="text-xs italic text-slate-500 font-sans mb-3">${plant.scientific}</p>
+              <p class="text-slate-600 text-xs leading-relaxed line-clamp-3 mb-4">${plant.shortDesc}</p>
+            </div>
+
+            <div>
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                ${plant.categories.map(cat => `<span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200">${cat}</span>`).join('')}
+              </div>
+
+              <button class="w-full py-2.5 bg-botanical-50 group-hover:bg-botanical-600 group-hover:text-white text-botanical-800 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 border border-botanical-200/60">
+                <span>Ver Ficha Científica</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+    }
+
+    const heroSearchInput = document.getElementById('heroSearchInput');
+    const heroSearchBtn = document.getElementById('heroSearchBtn');
+
+    function executeSearch() {
+      searchQuery = heroSearchInput.value.toLowerCase().trim();
+      renderPlants();
+      document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    heroSearchInput.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') executeSearch();
+      else {
+        searchQuery = heroSearchInput.value.toLowerCase().trim();
+        renderPlants();
+      }
+    });
+
+    heroSearchBtn.addEventListener('click', executeSearch);
+
+    function quickFilter(term) {
+      heroSearchInput.value = term;
+      searchQuery = term.toLowerCase();
+      renderPlants();
+      document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Category buttons
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.category-btn').forEach(b => {
+          b.className = 'category-btn bg-white hover:bg-botanical-100 text-slate-700 border border-botanical-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all';
+        });
+        btn.className = 'category-btn bg-botanical-600 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all shadow-sm';
+        currentCategory = btn.getAttribute('data-category');
+        renderPlants();
+      });
+    });
+
+    function resetFilters() {
+      currentCategory = 'todos';
+      searchQuery = '';
+      heroSearchInput.value = '';
+      document.querySelectorAll('.category-btn').forEach((b, idx) => {
+        if (idx === 0) b.className = 'category-btn bg-botanical-600 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all shadow-sm';
+        else b.className = 'category-btn bg-white hover:bg-botanical-100 text-slate-700 border border-botanical-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all';
+      });
+      renderPlants();
+    }
+
+    const modal = document.getElementById('plantModal');
+    const modalContent = document.getElementById('modalContent');
+
+    function openModal(plantId) {
+      const plant = plantsDatabase.find(p => p.id === plantId);
+      if (!plant) return;
+
+      document.getElementById('modalPlantIcon').innerText = plant.icon;
+      document.getElementById('modalPlantName').innerText = plant.name;
+      document.getElementById('modalPlantScientific').innerText = plant.scientific;
+      document.getElementById('modalPlantIndications').innerText = plant.indications;
+      document.getElementById('modalPlantPart').innerText = plant.partUsed;
+      document.getElementById('modalPlantMethod').innerText = plant.method;
+      document.getElementById('modalPlantDosage').innerText = plant.dosage;
+      document.getElementById('modalPlantWarnings').innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> ${plant.warnings}`;
+
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modalContent.classList.remove('scale-95');
+      modalContent.classList.add('scale-100');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modalContent.classList.remove('scale-100');
+      modalContent.classList.add('scale-95');
+      document.body.style.overflow = 'auto';
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    function selectSymptom(type) {
+      const step1 = document.getElementById('quizStep1');
+      const resultArea = document.getElementById('quizResult');
+      const resultContent = document.getElementById('quizResultContent');
+
+      step1.classList.add('hidden');
+      resultArea.classList.remove('hidden');
+
+      let plant = null;
+      let advice = '';
+
+      if (type === 'ansiedade') {
+        plant = plantsDatabase.find(p => p.id === 'passiflora') || plantsDatabase[0];
+        advice = 'A Passiflora e a Camomila são ideais para acalmar o sistema nervoso autônomo sem gerar dependência química.';
+      } else if (type === 'digestao') {
+        plant = plantsDatabase.find(p => p.id === 'boldo') || plantsDatabase[1];
+        advice = 'O Boldo e a Hortelã estimulam a produção de bile e facilitam a quebra rápida de gorduras pesadas.';
+      } else if (type === 'gripe') {
+        plant = plantsDatabase.find(p => p.id === 'guaco') || plantsDatabase[4];
+        advice = 'O Guaco combinado com Gengibre atua diretamente dilatando os brônquios e reduzindo a inflamação na garganta.';
+      } else if (type === 'disposicao') {
+        plant = plantsDatabase.find(p => p.id === 'alecrim') || plantsDatabase[2];
+        advice = 'O Alecrim é um tônico circulatório natural que eleva o estado de alerta mental e combate o cansaço sem a ansiedade do café.';
+      }
+
+      resultContent.innerHTML = `
+        <div class="flex items-start gap-4">
+          <span class="text-5xl p-3 bg-botanical-100 rounded-2xl shrink-0">${plant.icon}</span>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-botanical-700 bg-botanical-100 px-2 py-0.5 rounded-md">Recomendação Principal</span>
+            <h3 class="font-serif text-2xl font-bold text-slate-800 mt-1">${plant.name} (${plant.scientific})</h3>
+            <p class="text-slate-600 text-xs mt-2 leading-relaxed">${advice}</p>
+            
+            <div class="mt-4 p-4 bg-botanical-50 rounded-xl border border-botanical-200">
+              <h5 class="font-bold text-xs text-botanical-900 uppercase">Modo de Preparo Recomendado:</h5>
+              <p class="text-xs text-slate-700 mt-1">${plant.dosage}</p>
+            </div>
+
+            <button onclick="openModal('${plant.id}')" class="mt-4 px-4 py-2 bg-botanical-700 hover:bg-botanical-800 text-white rounded-xl text-xs font-bold transition-colors">
+              Ver Ficha Técnica Completa
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function resetQuiz() {
+      document.getElementById('quizStep1').classList.remove('hidden');
+      document.getElementById('quizResult').classList.add('hidden');
+    }
+
+    let timerInterval = null;
+    let totalTime = 420; // 7 mins default
+    let remainingTime = 420;
+    let isRunning = false;
+
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timerStatus = document.getElementById('timerStatus');
+    const btnText = document.getElementById('btnText');
+    const playIcon = document.getElementById('playIcon');
+    const plantSelect = document.getElementById('timerPlantSelect');
+
+    plantSelect.addEventListener('change', (e) => {
+      if (isRunning) resetTimer();
+      totalTime = parseInt(e.target.value);
+      remainingTime = totalTime;
+      updateDisplay();
+    });
+
+    function updateDisplay() {
+      const mins = Math.floor(remainingTime / 60);
+      const secs = remainingTime % 60;
+      timerDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function toggleTimer() {
+      if (isRunning) {
+        // Pause
+        clearInterval(timerInterval);
+        isRunning = false;
+        btnText.innerText = 'Continuar Infusão';
+        playIcon.className = 'fa-solid fa-play';
+        timerStatus.innerText = 'Pausado';
+      } else {
+        // Start
+        isRunning = true;
+        btnText.innerText = 'Pausar Infusão';
+        playIcon.className = 'fa-solid fa-pause';
+        timerStatus.innerText = 'Infundindo...';
+
+        timerInterval = setInterval(() => {
+          if (remainingTime > 0) {
+            remainingTime--;
+            updateDisplay();
+          } else {
+            clearInterval(timerInterval);
+            isRunning = false;
+            timerStatus.innerText = 'Pronto!';
+            btnText.innerText = 'Iniciar Infusão';
+            playIcon.className = 'fa-solid fa-play';
+            playChimeSound();
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      isRunning = false;
+      remainingTime = parseInt(plantSelect.value);
+      updateDisplay();
+      btnText.innerText = 'Iniciar Infusão';
+      playIcon.className = 'fa-solid fa-play';
+      timerStatus.innerText = 'Pronto';
+    }
+
+    // Audio Chime via Web Audio API
+    function playChimeSound() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.8); // A5
+
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.2);
+      } catch(e) {
+        console.log("Audio alert not supported or user interacted yet.");
+      }
+    }
+
+    const canvas = document.getElementById('leafCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class LeafParticle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = -20;
+        this.size = Math.random() * 12 + 8;
+        this.speedY = Math.random() * 1.2 + 0.5;
+        this.speedX = Math.random() * 0.8 - 0.4;
+        this.rotation = Math.random() * 360;
+        this.rotSpeed = (Math.random() - 0.5) * 1.5;
+        this.opacity = Math.random() * 0.35 + 0.15;
+      }
+
+      update() {
+        this.y += this.speedY;
+        this.x += Math.sin(this.y * 0.01) + this.speedX;
+        this.rotation += this.rotSpeed;
+
+        if (this.y > canvas.height + 20) {
+          this.reset();
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = '#4e8050';
+        
+        // Simple Leaf Path
+        ctx.beginPath();
+        ctx.moveTo(0, -this.size);
+        ctx.quadraticCurveTo(this.size / 2, 0, 0, this.size);
+        ctx.quadraticCurveTo(-this.size / 2, 0, 0, -this.size);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    const leaves = Array.from({ length: 22 }, () => new LeafParticle());
+
+    function animateLeaves() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      leaves.forEach(leaf => {
+        leaf.update();
+        leaf.draw();
+      });
+      requestAnimationFrame(animateLeaves);
+    }
+
+    // Mobile nav toggle
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Start App
+    window.onload = function() {
+      renderPlants();
+      animateLeaves();
+      updateDisplay();
+    };
+  </script>
+</body>
+</html>
